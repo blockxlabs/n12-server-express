@@ -21,7 +21,7 @@ const typeDefs = gql`
     name: String!
     shortDescription: String!
     longDescription: String!
-    DApps: [DApps!]
+    DApps: DApps!
   }
 
   type Query {
