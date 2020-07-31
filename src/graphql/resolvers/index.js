@@ -23,13 +23,13 @@ const resolvers = {
         return result;
       },
       async dApps (root, { uuid }, { models }) {
-        return models.DApps.findById(uuid)
+        return models.DApps.findByPk(uuid)
       },
       async allNotifications (root, args, { models }) {
         return models.Notifications.findAll()
       },
       async notifcations (root, { uuid }, { models }) {
-        return models.Notifications.findById(uuid)
+        return models.Notifications.findByPk(uuid)
       }      
     },
 
@@ -46,7 +46,6 @@ const resolvers = {
         to,
         subject: 'TEST',
         text: 'Testing some Mailgun emails!',
-        // html: htmlTemplate,
         template: "test",
         'h:X-Mailgun-Variables': JSON.stringify({
           "dAppLogo": "https://s2.coinmarketcap.com/static/img/coins/64x64/1518.png",
