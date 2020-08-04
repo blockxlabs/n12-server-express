@@ -30,6 +30,11 @@ const resolvers = {
       },
       async notifcations (root, { uuid }, { models }) {
         return models.Notifications.findByPk(uuid)
+      },
+      async getUserSubscriptions(root, { userUuid, dAppUuid }, { models }) {
+        return models.UserNotifications.findAll({
+          where: { userUuid, dAppUuid }
+        });
       }      
     },
 
@@ -62,7 +67,6 @@ const resolvers = {
       const userNotifications = await models.UserNotifications.bulkCreate(records, options);
       return userNotifications;
     }, 
-
     async testEmail(root, { to, apiKey, domain }, { emailUtil }) {
       const testData = {
         to,
@@ -98,7 +102,6 @@ const resolvers = {
     Notifications : async (dapp, args, {dataloader} ) =>  {    
       console.log(`fetching dapp ${dapp.uuid}`)
       const result = dataloader.notificationsLoader.load(dapp.uuid);
-      // dataloader.notificationsLoader.clear(dapp.uuid);
       return result;
     }
   },
@@ -106,9 +109,19 @@ const resolvers = {
     DApps : async (notification, args, {models, dataloader}) => {
       console.log(`fetching notification ${notification.dAppUuid}`);
       const result = dataloader.dappsLoader.load(notification.dAppUuid);
-      // dataloader.dappsLoader.clear(notification.dAppUuid);
       return result;
     }
+  },
+  UserNotifications: {
+    DApp: async (userNotifications, args, { models }) => {
+      return models.DApps.findByPk(userNotifications.dAppUuid);
+    },
+    Notification: async (userNotifications, args, { models }) => {
+      return models.Notifications.findByPk(userNotifications.notificationsUuid);
+    },
+    User: (userNotifications, args, { models }) => {
+      return models.User.findByPk(userNotifications.userUuid);
+    },
   }
 }
 

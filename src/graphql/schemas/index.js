@@ -18,14 +18,16 @@ const typeDefs = gql`
     name: String!
     shortDescription: String!
     longDescription: String!
-    DApps: [DApps!]
+    DApps: DApps!
   }
   type UserNotifications {
     uuid: String
     userUuid: String
     dAppUuid: String
     notificationsUuid: String,
-    Notifications: [Notifications]
+    Notification: Notifications!
+    DApp: DApps!
+    User: User!
   }
   type Query {
     user(id: Int!): User
@@ -34,8 +36,8 @@ const typeDefs = gql`
     dApps(uuid: String!): DApps
     allNotifications: [Notifications!]!
     notifcations(uuid: String!): Notifications
+    getUserSubscriptions(userUuid: String!, dAppUuid: String!): [UserNotifications]
   }
-
   type Mutation {
     createUser(email: String!): User!
     subscribeNotificcations(email : String!,dAppUuid: String!,selectedNotifications:[String!]): [UserNotifications]
