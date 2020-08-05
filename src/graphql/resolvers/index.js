@@ -48,7 +48,7 @@ const resolvers = {
         password: await bcrypt.hash(password, 10)
       })
     },
-    async subscribeNotifications(root, { email, dAppUuid, selectedNotifications }, { models }) {
+    async subscribeNotifications(root, { email, dAppUuid, selectedNotifications }, { models, emailUtil }) {
       try {
         const [user, created] = await models.User.findOrCreate({
           raw: true,
@@ -68,6 +68,8 @@ const resolvers = {
 
         const options = { returning: true };
         const userNotifications = await models.UserNotifications.bulkCreate(records, options);
+        const confirmEmailData = await emailUtil.createConfirmEmailData(dAppUuid, selectedNotifications, user);
+        await emailUtil.sendEmail(confirmEmailData);
         return userNotifications;
       } catch (error) {
         throw new ApolloError(
