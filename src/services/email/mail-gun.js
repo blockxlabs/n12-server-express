@@ -37,8 +37,7 @@ const createConfirmEmailData = async (dAppUuid, notificationUuids, user) => {
     to: user.email,
     subject: 'Subscription Confirmation',
     text: emailText,
-    // replace test template with actual template here
-    template: "test",
+    template: email.getConfirmationEmailTemplate(),
     'h:X-Mailgun-Variables': JSON.stringify(emailContent)
   };
   return emailData;

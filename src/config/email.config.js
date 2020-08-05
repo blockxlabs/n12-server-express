@@ -19,6 +19,12 @@ const contractSchema = convict({
     format: "String",
     default: null,
     env: "EMAIL_FROM",
+  },
+  ConfirmationEmailTemplate: {
+    doc: "template id of confirmation email in mailgun",
+    format: "String",
+    default: null,
+    env: "CONFIRMATION_EMAIL_TEMPLATE"
   }
 });
 
@@ -40,6 +46,16 @@ const getMailGunDomain = () => {
   }
 };
 
+const getConfirmationEmailTemplate = () => {
+  try {
+    const result = contractSchema.get('ConfirmationEmailTemplate');
+    return result;
+  } catch (error) {
+    throw Error("Missing ConfirmationEmailTemplate");
+  }
+};
+
+
 const getEmailFrom = () => {
   try {
     const result = contractSchema.get('EmailFrom');
@@ -53,5 +69,6 @@ module.exports = {
   ...contractSchema,
   getMailGunAPIKey,
   getMailGunDomain,
-  getEmailFrom
+  getEmailFrom,
+  getConfirmationEmailTemplate
 };
