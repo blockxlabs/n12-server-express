@@ -1,25 +1,21 @@
 "use strict";
 
-require("dotenv").config("../../../.env");
+const config = require("../../config");
 const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
-// const config = require(__dirname + '/../config/config.json')[env];
-const config = require("../config/config");
-
 const db = {};
 
 const sequelize = new Sequelize(
-  config.CFG_DB_NAME,
-  config.CFG_DB_USER,
-  config.CFG_DB_PASSWORD,
+  config.db.getDBName(),
+  config.db.getDBUser(),
+  config.db.getDBPassword(),
   {
-    dialect: config.CFG_DB_DIALECT,
-    host: config.CFG_DB_HOST,
+    dialect: config.db.getDBDialect(),
+    host: config.db.getDBHost(),
     minifyAliases: true,
-    logging: false,
+    logging: config.db.getDBLogging() ? console.log : false,
   }
 );
 

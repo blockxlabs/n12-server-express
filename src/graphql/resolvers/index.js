@@ -1,4 +1,3 @@
-const bcrypt = require('bcryptjs');
 const  uuid  = require('uuid');
 const { ApolloError } = require('apollo-server');
 
@@ -33,22 +32,15 @@ const resolvers = {
       async notifcations (root, { uuid }, { models }) {
         return models.Notifications.findByPk(uuid)
       },
-      async getUserSubscriptions(root, { userUuid, dAppUuid }, { models }) {
+      async getUserSubscriptions(root, { userUuid }, { models }) {
         return models.UserNotifications.findAll({
-          where: { userUuid, dAppUuid }
+          where: { userUuid }
         });
       }      
     },
 
   Mutation: {
-    async createUser (root, { name, email, password }, { models }) {
-      return models.User.create({
-        name,
-        email,
-        password: await bcrypt.hash(password, 10)
-      })
-    },
-    async subscribeNotifications(root, { email, dAppUuid, selectedNotifications }, { models }) {
+    async subscribeNotifications(root, { email, dAppUuid, selectedNotifications }, { models, emailUtil }) {
       try {
         const [user, created] = await models.User.findOrCreate({
           raw: true,
@@ -66,8 +58,10 @@ const resolvers = {
           }
         });
 
-        const options = { returning: true };
+        const options = { returning: true, updateOnDuplicate: ['user_uuid', 'd_app_uuid','notifications_uuid'] };
         const userNotifications = await models.UserNotifications.bulkCreate(records, options);
+        // const confirmEmailData = await emailUtil.createConfirmEmailData(dAppUuid, selectedNotifications, user);
+        // await emailUtil.sendEmail(confirmEmailData);
         return userNotifications;
       } catch (error) {
         throw new ApolloError(
@@ -114,14 +108,14 @@ const resolvers = {
 
   DApps: {
     Notifications : async (dapp, args, {dataloader} ) =>  {    
-      console.log(`fetching dapp ${dapp.uuid}`)
+      // console.log(`fetching dapp ${dapp.uuid}`)
       const result = dataloader.notificationsLoader.load(dapp.uuid);
       return result;
     }
   },
   Notifications: {
     DApps : async (notification, args, {models, dataloader}) => {
-      console.log(`fetching notification ${notification.dAppUuid}`);
+      // console.log(`fetching notification ${notification.dAppUuid}`);
       const result = dataloader.dappsLoader.load(notification.dAppUuid);
       return result;
     }
