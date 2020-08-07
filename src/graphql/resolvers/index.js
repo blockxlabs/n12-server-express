@@ -58,7 +58,7 @@ const resolvers = {
           }
         });
 
-        const options = { returning: true, updateOnDuplicate: ['user_uuid', 'd_app_uuid','notifications_uuid'] };
+        const options = { returning: true, updateOnDuplicate: ['user_uuid', 'd_app_uuid','notifications_uuid', 'deleted_at'] };
         const userNotifications = await models.UserNotifications.bulkCreate(records, options);
         // const confirmEmailData = await emailUtil.createConfirmEmailData(dAppUuid, selectedNotifications, user);
         // await emailUtil.sendEmail(confirmEmailData);
