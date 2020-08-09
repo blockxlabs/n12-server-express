@@ -6,21 +6,31 @@
   "repository": "git@github.com:blockxlabs/n12-server-express.git",
   "author": "info@blockxlabs.com",
   "dependencies": {
+    "@apollo/federation": "^0.18.0",
+    "@apollo/gateway": "^0.18.0",
     "apollo-server": "^2.15.1",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^5.2.0",
     "dataloader": "^2.0.0",
     "dotenv": "^8.2.0",
+    "express-jwt": "^6.0.0",
     "graphql": "^14.7.0",
+    "graphql-middleware": "^4.0.2",
+    "graphql-shield": "^7.3.2",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^8.2.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.3.0",
+    "uuid": "^8.2.0",
+    "wait-on": "^5.1.0"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.2.0",
-    "sequelize-auto-migrations": "blockxlabs/sequelize-auto-migrations#master"
-  },
+    "sequelize-auto-migrations": "blockxlabs/sequelize-auto-migrations#master",
+    "sequelize-cli": "^6.2.0"
   },
   "scripts": {
-    "start": "node src/index.js"
+    "start": "concurrently -k npm:server:*",
+    "server:accounts": "nodemon src/index.js",
+    "server:gateway": "wait-on tcp:4000 && nodemon src/gateway/index.js"
   }
 }

@@ -14,12 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
+    uuid: {
+      type: DataTypes.UUID, 
+      primaryKey: true, 
+      allowNull: false
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false
     },
     email: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false
     },
     password: {
@@ -28,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     tableName: 'users',
+    underscored: true,   
     sequelize,
     modelName: 'User',
   });

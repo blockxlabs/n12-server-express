@@ -1,10 +1,12 @@
 const bcrypt = require('bcryptjs');
+const  uuid  = require('uuid');
+const jwt = require("jsonwebtoken");
 
 const resolvers = {
   Query: {
-      async user (root, { id }, { models }) {
+    async user (root, { id }, { models }) {
         return models.User.findById(id)
-      },
+    },
       async allDApps (root, args, { models }) {
         return models.DApps.findAll();
       },
@@ -36,10 +38,40 @@ const resolvers = {
   Mutation: {
     async createUser (root, { name, email, password }, { models }) {
       return models.User.create({
+        uuid: uuid.v4(),
         name,
         email,
         password: await bcrypt.hash(password, 10)
       })
+    },
+    async login(root, args, { models, Op }) {
+      const options = {
+        raw:true,
+        where: {
+          email: args.email
+        }
+      }
+      const result = await models.User.findOne(options);
+      const {  email, name, password  } = result;      
+      isValidPassword = await bcrypt.compare(args.password,password) 
+      if (isValidPassword) {
+         const jwtToken = await jwt.sign(
+           { url : "https://localhost:4001/graphql" },
+           "f1BtnWgD3VKY",
+           { algorithm: "HS256", subject: String(uuid), expiresIn: "1d" }
+         );
+          return {
+            email,
+            name,
+            jwt: jwtToken
+          }
+        } else  {
+         return {
+           email,
+           name
+         }
+      }    
+    
     }
   },
 
