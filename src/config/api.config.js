@@ -13,7 +13,13 @@ const apiSchema = convict({
     format: "port",
     default: 4000,
     env: "PORT",
-  }
+  },
+  cors: {
+    doc: "cors urls",
+    format: "String",
+    default: "http://localhost:3000",
+    env: "API_CORS",
+  },
 });
 
 const getN12WebUrl = () => {
@@ -34,8 +40,24 @@ const getPort = () => {
   }
 };
 
+
+const getCors = () => {
+  try {
+    const result = apiSchema.get("cors");
+    const splitResult = result.split(','); 
+    if(splitResult.length > 1){
+      return splitResult;
+    }else{
+      return result;
+    }
+  } catch (error) {
+    throw Error("Missing cors");
+  }
+};
+
 module.exports = {
   ...apiSchema,
   getN12WebUrl,
-  getPort
+  getPort,
+  getCors
 };

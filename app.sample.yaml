@@ -1,0 +1,28 @@
+runtime: nodejs10
+
+instance_class: F1
+
+env_variables:
+  NODE_ENV: "production"
+  DB_NAME: ""
+  DB_HOST: ""
+  DB_USER: ""
+  DB_DIALECT: "postgres"
+  DB_PASSWORD: ""
+  MAIL_GUN_API_KEY: ""
+  MAIL_GUN_DOMAIN: ""
+  MAIL_GUN_EMAIL_FROM: ""
+  MAIL_GUN_CONFIRMATION_EMAIL_TEMPLATE: ""
+  N12_WEB_URL: ""
+  API_CORS: ""
+  APOLLO_INTROSPECTION: false
+  APOLLO_PLAYGROUND: false
+
+automatic_scaling: 
+  max_instances: 0
+
+handlers:
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto

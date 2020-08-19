@@ -7,8 +7,12 @@ const createLoader = require('./dataloaders');
 const { Op } = require("sequelize");
 const config = require('../config');
 
+const corsOptions = {
+  origin: config.api.getCors()
+}
+
 const server = new ApolloServer({
-  cors: true, 
+  cors: corsOptions, 
   typeDefs,
   resolvers,
   context: ({ req }) => {
