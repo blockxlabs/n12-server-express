@@ -25,6 +25,12 @@ const emailSchema = convict({
     format: "String",
     default: "n12-notification-subscribed",
     env: "MAIL_GUN_CONFIRMATION_EMAIL_TEMPLATE"
+  },
+  EmailEnabled: {
+    doc: "if enable email sending",
+    format: "Boolean",
+    default: "false",
+    env: "EMAIL_ENABLED"
   }
 });
 
@@ -65,10 +71,20 @@ const getEmailFrom = () => {
   }
 };
 
+const getEmailEnabled = () => {
+  try {
+    const result = emailSchema.get("EmailEnabled");
+    return result;
+  } catch (error) {
+    throw Error("Missing EmailEnabled");
+  }
+};
+
 module.exports = {
   ...emailSchema,
   getMailGunAPIKey,
   getMailGunDomain,
   getEmailFrom,
-  getConfirmationEmailTemplate
+  getConfirmationEmailTemplate,
+  getEmailEnabled
 };
