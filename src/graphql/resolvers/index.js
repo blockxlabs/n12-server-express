@@ -1,5 +1,6 @@
 const  uuid  = require('uuid');
 const { ApolloError } = require('apollo-server');
+const { email: emailConfig } = require('../../config');
 
 const resolvers = {
   Query: {
@@ -60,8 +61,10 @@ const resolvers = {
 
         const options = { returning: true, updateOnDuplicate: ['user_uuid', 'd_app_uuid','notifications_uuid', 'deleted_at'] };
         const userNotifications = await models.UserNotifications.bulkCreate(records, options);
-        // const confirmEmailData = await emailUtil.createConfirmEmailData(dAppUuid, selectedNotifications, user);
-        // await emailUtil.sendEmail(confirmEmailData);
+        if (emailConfig.getEmailEnabled()) {
+          const confirmEmailData = await emailUtil.createConfirmEmailData(dAppUuid, selectedNotifications, user);
+          await emailUtil.sendEmail(confirmEmailData);
+        }
         return userNotifications;
       } catch (error) {
         throw new ApolloError(
