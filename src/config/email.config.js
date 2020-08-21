@@ -30,7 +30,7 @@ const emailSchema = convict({
     doc: "if enable email sending",
     format: "Boolean",
     default: "false",
-    env: "EMAIL_ENABLED"
+    env: "MAIL_GUN_EMAIL_ENABLED"
   }
 });
 

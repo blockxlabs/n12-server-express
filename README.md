@@ -24,3 +24,6 @@
 ```
 yarn run start-dev
 ```
+
+### Deployment for Google App Engine
+DB_HOST /cloudsql/INSTANCE_CONNECTION_NAME
