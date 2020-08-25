@@ -33,6 +33,22 @@ const resolvers = {
       async notifcations (root, { uuid }, { models }) {
         return models.Notifications.findByPk(uuid)
       },
+      async notifcationsByDApp(root, { dAppUuid, offset, limit }, { models }) {
+        const { count, rows } = await models.Notifications.findAndCountAll({
+          where: { dAppUuid },
+          offset: offset || 0,
+          limit: limit || 10
+        });
+
+        const dApp = await models.DApps.findByPk(dAppUuid);
+
+        return {
+          notifications: rows,
+          totalCount: count,
+          dApp
+        };
+
+      },
       async UserSubscriptions(root, { userUuid }, { models }) {
         return models.UserNotifications.findAll({
           where: { userUuid }
