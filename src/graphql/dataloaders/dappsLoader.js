@@ -8,13 +8,13 @@ const dappsLoaderInit = () => {
     })
     .then(dapps => {
       const dappsById = dapps.reduce((value, dapp) => {
-        if (!value[dapp.uuid]) value[dapp.uuid] = [];
-        value[dapp.uuid].push(dapp);
+        value[dapp.uuid] = dapp;
         return value;
       }, {});
-      return dAppUuids.map(id => {
+      const result = dAppUuids.map(id => {
         return dappsById[id];
       });
+      return result;
     });
   });  
 }

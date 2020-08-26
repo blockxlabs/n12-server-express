@@ -30,8 +30,24 @@ const resolvers = {
       async allNotifications (root, args, { models }) {
         return models.Notifications.findAll()
       },
-      async notifcations (root, { uuid }, { models }) {
+      async notifications (root, { uuid }, { models }) {
         return models.Notifications.findByPk(uuid)
+      },
+      async notificationsByDApp(root, { dAppUuid, offset, limit }, { models }) {
+        const { count, rows } = await models.Notifications.findAndCountAll({
+          where: { dAppUuid },
+          offset: offset || 0,
+          limit: limit || 10
+        });
+
+        const dApp = await models.DApps.findByPk(dAppUuid);
+
+        return {
+          notifications: rows,
+          totalCount: count,
+          dApp
+        };
+
       },
       async UserSubscriptions(root, { userUuid }, { models }) {
         return models.UserNotifications.findAll({

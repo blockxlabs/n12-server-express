@@ -29,13 +29,19 @@ const typeDefs = gql`
     DApp: DApps!
     User: User!
   }
+  type NotificationSearchResult {
+    notifications: [Notifications]!
+    totalCount: Int!
+    dApp: DApps!
+  }
   type Query {
     user(id: Int!): User
     allDApps: [DApps!]!
     searchDApps(searchLike: String!): [DApps!]!
     dApps(uuid: String!): DApps
     allNotifications: [Notifications!]!
-    notifcations(uuid: String!): Notifications
+    notifications(uuid: String!): Notifications
+    notificationsByDApp(dAppUuid: String!, offset: Int, limit: Int): NotificationSearchResult!
     UserSubscriptions(userUuid: String!): [UserNotifications]
   }
   type Mutation {
