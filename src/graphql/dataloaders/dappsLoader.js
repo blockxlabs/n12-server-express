@@ -3,7 +3,7 @@ const models = require('../../db/models');
 
 const dappsLoaderInit = () => {
   return new DataLoader((dAppUuids) => {
-    return models.DApps.findAll({
+    return models.DApp.findAll({
       where: { uuid: dAppUuids }
     })
     .then(dapps => {

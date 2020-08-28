@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class UserNotifications extends Model {
+  class UserNotification extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     };
     
-  UserNotifications.init({
+  UserNotification.init({
     uuid: {
       type: DataTypes.UUID, 
       allowNull: false
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     paranoid: true,
     deletedAt: 'deleted_at',
     sequelize,
-    modelName: 'UserNotifications',
+    modelName: 'UserNotification',
     indexes: [
       // Create a unique index on email
       {
@@ -51,10 +51,10 @@ module.exports = (sequelize, DataTypes) => {
     ]
   });
     
-  UserNotifications.associate = (models) =>{
-    UserNotifications.belongsTo(models.DApps, { foreignKey: 'd_app_uuid' });
-    UserNotifications.belongsTo(models.Notifications, { foreignKey: 'notifications_uuid' });
-    UserNotifications.belongsTo(models.User, { foreignKey: 'user_uuid' });      
+  UserNotification.associate = (models) =>{
+    UserNotification.belongsTo(models.DApp, { foreignKey: 'd_app_uuid' });
+    UserNotification.belongsTo(models.Notification, { foreignKey: 'notifications_uuid' });
+    UserNotification.belongsTo(models.User, { foreignKey: 'user_uuid' });      
   }
-  return UserNotifications;
+  return UserNotification;
 };
