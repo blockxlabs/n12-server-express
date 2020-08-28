@@ -4,7 +4,7 @@ const models = require('../../db/models');
 const notificationsLoaderInit = () => {
   return new DataLoader((dAppUuids) => {
     // find all dapps in one query
-    return models.Notifications.findAll({
+    return models.Notification.findAll({
       where: { dAppUuid: dAppUuids }
     })
     // order of returned array should match the order of studentIds

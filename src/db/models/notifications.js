@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Notifications extends Model {
+  class Notification extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // this.belongsTo(models.DApps, {foreignKey: 'd_app_uuid', as: 'DApps' })
     }
   };
-  Notifications.init({
+  Notification.init({
     uuid: {
       type: DataTypes.UUID, 
       primaryKey: true, 
@@ -38,11 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'notifications',
     underscored: true, 
     sequelize,
-    modelName: 'Notifications',
+      modelName: 'Notification',
   });
 
-  Notifications.associate = (models) =>{
-    Notifications.belongsTo(models.DApps, { foreignKey: 'd_app_uuid' });
+  Notification.associate = (models) =>{
+    Notification.belongsTo(models.DApp, { foreignKey: 'd_app_uuid' });
   }
-  return Notifications;
+  return Notification;
 };

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class DApps extends Model {
+  class DApp extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // this.hasMany(models.Notifications, { as: "Notifications" });
     }
   };
-  DApps.init({
+  DApp.init({
     uuid: {
       type: DataTypes.UUID, 
       primaryKey: true, 
@@ -33,11 +33,11 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'dapps',
     underscored: true, 
     sequelize,
-    modelName: 'DApps',
+      modelName: 'DApp',
   });
 
-  DApps.associate = (models) =>{
-    DApps.hasMany(models.Notifications, { as: "Notifications" });
+  DApp.associate = (models) =>{
+    DApp.hasMany(models.Notification, { as: "Notifications" });
   }
-  return DApps;
+  return DApp;
 };

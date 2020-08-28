@@ -8,7 +8,7 @@ const resolvers = {
         return models.User.findByPk(id)
       },
       async allDApps (root, args, { models }) {
-        return models.DApps.findAll();
+        return models.DApp.findAll();
       },
       async searchDApps (root, args, { models, Op }) {
         const options = {
@@ -20,18 +20,18 @@ const resolvers = {
           }
         }
 
-        const result = await models.DApps.findAll(options);
+        const result = await models.DApp.findAll(options);
 
         return result;
       },
-      async dApps (root, { uuid }, { models }) {
-        return models.DApps.findByPk(uuid)
+      async dApp (root, { uuid }, { models }) {
+        return models.DApp.findByPk(uuid)
       },
       async allNotifications (root, args, { models }) {
-        return models.Notifications.findAll()
+        return models.Notification.findAll()
       },
-      async notifications (root, { uuid }, { models }) {
-        return models.Notifications.findByPk(uuid)
+      async notification (root, { uuid }, { models }) {
+        return models.Notification.findByPk(uuid)
       },
       async notificationsByDApp(root, { dAppUuid, searchQuery, offset, limit }, { models,Op }) {
 
@@ -40,13 +40,13 @@ const resolvers = {
           where.name = { [Op.iLike]: `%${searchQuery}%` };
         }
 
-        const { count, rows } = await models.Notifications.findAndCountAll({
+        const { count, rows } = await models.Notification.findAndCountAll({
           where,
           offset: offset || 0,
           limit: limit || 10
         });
 
-        const dApp = await models.DApps.findByPk(dAppUuid);
+        const dApp = await models.DApp.findByPk(dAppUuid);
 
         return {
           notifications: rows,
@@ -56,7 +56,7 @@ const resolvers = {
 
       },
       async UserSubscriptions(root, { userUuid }, { models }) {
-        return models.UserNotifications.findAll({
+        return models.UserNotification.findAll({
           where: { userUuid }
         });
       }      
@@ -82,7 +82,7 @@ const resolvers = {
         });
 
         const options = { returning: true, updateOnDuplicate: ['user_uuid', 'd_app_uuid','notifications_uuid', 'deleted_at'] };
-        const userNotifications = await models.UserNotifications.bulkCreate(records, options);
+        const userNotifications = await models.UserNotification.bulkCreate(records, options);
         if (emailConfig.getEmailEnabled()) {
           const confirmEmailData = await emailUtil.createConfirmEmailData(dAppUuid, selectedNotifications, user);
           await emailUtil.sendEmail(confirmEmailData);
@@ -97,7 +97,7 @@ const resolvers = {
 
     }, 
     async unsubscribeNotifications(root, { userNotifications }, { models }) {
-      await models.UserNotifications.destroy({ where: { uuid: userNotifications } });
+      await models.UserNotification.destroy({ where: { uuid: userNotifications } });
       return true;
     },
     async testEmail(root, { to, apiKey, domain }, { emailUtil }) {
@@ -131,29 +131,29 @@ const resolvers = {
     }
   },
 
-  DApps: {
+  DApp: {
     Notifications : async (dapp, args, {dataloader} ) =>  {    
       // console.log(`fetching dapp ${dapp.uuid}`)
       const result = dataloader.notificationsLoader.load(dapp.uuid);
       return result;
     }
   },
-  Notifications: {
-    DApps : async (notification, args, {models, dataloader}) => {
+  Notification: {
+    DApp : async (notification, args, {models, dataloader}) => {
       // console.log(`fetching notification ${notification.dAppUuid}`);
       const result = dataloader.dappsLoader.load(notification.dAppUuid);
       return result;
     }
   },
-  UserNotifications: {
-    DApp: async (userNotifications, args, { models }) => {
-      return models.DApps.findByPk(userNotifications.dAppUuid);
+  UserNotification: {
+    DApp: async (userNotification, args, { models }) => {
+      return models.DApp.findByPk(userNotification.dAppUuid);
     },
-    Notification: async (userNotifications, args, { models }) => {
-      return models.Notifications.findByPk(userNotifications.notificationsUuid);
+    Notification: async (userNotification, args, { models }) => {
+      return models.Notification.findByPk(userNotification.notificationsUuid);
     },
-    User: (userNotifications, args, { models }) => {
-      return models.User.findByPk(userNotifications.userUuid);
+    User: (userNotification, args, { models }) => {
+      return models.User.findByPk(userNotification.userUuid);
     },
   }
 }

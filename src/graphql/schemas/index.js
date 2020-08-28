@@ -5,47 +5,47 @@ const typeDefs = gql`
     uuid: String!
     email: String!
   }
-  type DApps {
+  type DApp {
     uuid: String!
     name: String!
     description: String!
     logoUrl: String!
-    Notifications: [Notifications!]
+    Notifications: [Notification!]
   }
-  type Notifications {
+  type Notification {
     uuid: String!
     dAppUuid: String!
     name: String!
     shortDescription: String!
     longDescription: String!
-    DApps: DApps!
+    DApp: DApp!
   }
-  type UserNotifications {
+  type UserNotification {
     uuid: String
     userUuid: String
     dAppUuid: String
     notificationsUuid: String,
-    Notification: Notifications!
-    DApp: DApps!
+    Notification: Notification!
+    DApp: DApp!
     User: User!
   }
   type NotificationSearchResult {
-    notifications: [Notifications]!
+    notifications: [Notification]!
     totalCount: Int!
-    dApp: DApps!
+    dApp: DApp!
   }
   type Query {
     user(id: Int!): User
-    allDApps: [DApps!]!
-    searchDApps(searchLike: String!): [DApps!]!
-    dApps(uuid: String!): DApps
-    allNotifications: [Notifications!]!
-    notifications(uuid: String!): Notifications
+    allDApps: [DApp!]!
+    searchDApps(searchLike: String!): [DApp!]!
+    dApp(uuid: String!): DApp
+    allNotifications: [Notification!]!
+    notification(uuid: String!): Notification
     notificationsByDApp(dAppUuid: String!, searchQuery: String, offset: Int, limit: Int): NotificationSearchResult!
-    UserSubscriptions(userUuid: String!): [UserNotifications]
+    UserSubscriptions(userUuid: String!): [UserNotification]
   }
   type Mutation {
-    subscribeNotifications(email : String!,dAppUuid: String!,selectedNotifications:[String!]): [UserNotifications]
+    subscribeNotifications(email : String!,dAppUuid: String!,selectedNotifications:[String!]): [UserNotification]
     unsubscribeNotifications(userNotifications:[String!]): Boolean
     testEmail(to: String, apiKey: String, domain: String): Boolean!
   }
