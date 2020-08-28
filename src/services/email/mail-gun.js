@@ -8,8 +8,8 @@ const emailFrom = config.email.getEmailFrom();
 const mailgun = new Mailgun({ apiKey, domain });
 
 const createConfirmEmailData = async (dAppUuid, notificationUuids, user) => {
-  const dApp = await models.DApps.findByPk(dAppUuid);
-  const notifications = await models.Notifications.findAll({
+  const dApp = await models.DApp.findByPk(dAppUuid);
+  const notifications = await models.Notification.findAll({
     where : {
       uuid: notificationUuids
     }
