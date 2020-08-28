@@ -33,9 +33,15 @@ const resolvers = {
       async notifications (root, { uuid }, { models }) {
         return models.Notifications.findByPk(uuid)
       },
-      async notificationsByDApp(root, { dAppUuid, offset, limit }, { models }) {
+      async notificationsByDApp(root, { dAppUuid, searchQuery, offset, limit }, { models,Op }) {
+
+        const where = { dAppUuid };
+        if (searchQuery) {
+          where.name = { [Op.iLike]: `%${searchQuery}%` };
+        }
+
         const { count, rows } = await models.Notifications.findAndCountAll({
-          where: { dAppUuid },
+          where,
           offset: offset || 0,
           limit: limit || 10
         });
